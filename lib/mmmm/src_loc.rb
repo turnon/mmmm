@@ -19,8 +19,14 @@ module Mmmm
 
     private
 
-    def src_loc obj, method
-      file, line = obj.method(method).source_location
+    def src_loc obj, method_name
+      method = obj.method(method_name)
+      puts_location method
+      puts_location method while method = method.super_method
+    end
+
+    def puts_location method
+      file, line = method.source_location
       puts [cyan(file), line].join ' '
     end
 

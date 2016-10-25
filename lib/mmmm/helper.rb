@@ -3,7 +3,7 @@ Mmmm::Top = self
 module Mmmm
 
   Helper = Proc.new do |obj, method = nil|
-    Mmmm[obj, method]
+    Mmmm.src obj, method
   end
 
   class << self

@@ -20,14 +20,31 @@ module Mmmm
     private
 
     def src_loc obj, method_name
-      method = obj.method(method_name)
-      puts_location method
-      puts_location method while method = method.super_method
+      ancs = all_ancestors(obj)
+      instance_method_locations(method_name, ancs).
+	each do |file, line|
+          puts [cyan(file), line].join ' '
+        end
     end
 
-    def puts_location method
-      file, line = method.source_location
-      puts [cyan(file), line].join ' '
+    def all_ancestors obj
+      obj.
+        singleton_class.
+        ancestors
+    end
+
+    def instance_method_locations method_name, mods
+      mods.each_with_object([]) do |class_or_module, locs|
+            loc = instance_method_location method_name, class_or_module
+            locs << loc unless loc.nil?
+           end.
+	   uniq
+    end
+
+    def instance_method_location method_name, mod
+      mod.instance_method(method_name).source_location
+    rescue NameError => e
+      nil
     end
 
     def all_src_loc obj

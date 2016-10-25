@@ -1,3 +1,5 @@
+require 'mmmm/object_method'
+
 module Mmmm
 
   class FileLineMethod
@@ -20,31 +22,7 @@ module Mmmm
     private
 
     def src_loc obj, method_name
-      ancs = all_ancestors(obj)
-      instance_method_locations(method_name, ancs).
-	each do |file, line|
-          puts [cyan(file), line].join ' '
-        end
-    end
-
-    def all_ancestors obj
-      obj.
-        singleton_class.
-        ancestors
-    end
-
-    def instance_method_locations method_name, mods
-      mods.each_with_object([]) do |class_or_module, locs|
-            loc = instance_method_location method_name, class_or_module
-            locs << loc unless loc.nil?
-           end.
-	   uniq
-    end
-
-    def instance_method_location method_name, mod
-      mod.instance_method(method_name).source_location
-    rescue NameError => e
-      nil
+      ObjectMethod.new obj, method_name
     end
 
     def all_src_loc obj

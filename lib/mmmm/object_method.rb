@@ -7,8 +7,8 @@ module Mmmm
 
     def inspect
       @locs_in_all_ancs.
-	map{|file, line| [file.cyan, line].join(' ')}.
-	join("\n")
+        map{ |file, line| [file.cyan, line].join(' ') }.
+        join("\n")
     end
 
     private
@@ -24,7 +24,7 @@ module Mmmm
             loc = instance_method_location method_name, class_or_module
             locs << loc unless loc.nil?
            end.
-	   uniq
+           uniq
     end
 
     def instance_method_location method_name, mod

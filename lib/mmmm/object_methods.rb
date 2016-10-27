@@ -7,7 +7,7 @@ module Mmmm
         @file = src_loc[0]
         @line = src_loc[1]
         @method = m
-	@inherited = inherited
+        @inherited = inherited
       end
 
       def inherited?
@@ -21,8 +21,8 @@ module Mmmm
 
     def inspect
       group_by_inherited_and_file.
-	map {|inh_file, flms| "#{inh_file[1].cyan} #{inh_file[0]}\n#{lm_in_string(flms)}" }.
-	join("\n")
+        map { |inh_file, flms| "#{inh_file[1].cyan} #{inh_file[0]}\n#{lm_in_string(flms)}" }.
+        join("\n")
     end
 
     private
@@ -30,9 +30,7 @@ module Mmmm
     def file_line_method_arr
       @obj.methods.each_with_object([]) do |m, rs|
         file_line = @obj.method(m).source_location
-        if file_line
-          rs << FileLineMethod.new(file_line, m, inherited?(m))
-        end
+        rs << FileLineMethod.new(file_line, m, inherited?(m)) if file_line
       end
     end
 
@@ -42,23 +40,23 @@ module Mmmm
 
     def open_class_defined_methods
       @ocdm ||= [:singleton_class, :class].
-	map{|klass| @obj.send(klass).instance_methods(false)}.
-	flatten.
-	uniq
+        map{ |klass| @obj.send(klass).instance_methods(false) }.
+        flatten.
+        uniq
     end
 
     def group_by_inherited_and_file
       grouped = file_line_method_arr.
-	group_by{|flm| [flm.inherited?.to_s, flm.file]}.
-	sort_by{|inh_f, flm| inh_f}
+        group_by{ |flm| [flm.inherited?.to_s, flm.file] }.
+        sort_by{ |inh_f, _| inh_f }
 
       Hash[grouped]
     end
 
     def lm_in_string flms
       flms.
-	map {|flm| "#{format('%5d', flm.line)} #{flm.method}" }.
-	join("\n")
+        map {|flm| "#{format('%5d', flm.line)} #{flm.method}" }.
+        join("\n")
     end
   end
 end

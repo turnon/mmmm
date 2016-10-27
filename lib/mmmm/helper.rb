@@ -11,8 +11,7 @@ module Mmmm
     def helper name
       if Mmmm::Top.respond_to? name or
         Mmmm::Top.private_methods.include? name
-	raise NameError,"#{name} is already defined. Please use Mmmm.helper(:another_name)"
-        return
+        raise NameError, "#{name} is already defined. Please use Mmmm.helper(:another_name)"
       end
       define_helper_method name
     end
